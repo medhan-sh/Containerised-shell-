@@ -5,6 +5,9 @@ A container runtime built from scratch in Go.
 Implements Linux namespaces (UTS, PID, MNT, NET), cgroups, 
 chroot, and an Alpine Linux rootfs — no Docker, no libraries.
 
+<img width="464" height="127" alt="Screenshot 2026-06-08 at 9 54 30 PM" src="https://github.com/user-attachments/assets/52bc2fc3-ecb1-4da9-90a6-a327a181e171" />
+
+
 There's no particular reason for anyone to use this neither anyone is gonna use this coz making a container and making it run a shell will do more than this but this looks cool and is a learning project plus i got way too much time so why not.
 
 ## Run it
