@@ -4,6 +4,7 @@ A container runtime built from scratch in Go.
 
 Implements Linux namespaces (UTS, PID, MNT, NET), cgroups, 
 chroot, and an Alpine Linux rootfs — no Docker, no libraries.
+Haven't started working on the TUI tho :(
 
 <img width="464" height="127" alt="Screenshot 2026-06-08 at 9 54 30 PM" src="https://github.com/user-attachments/assets/52bc2fc3-ecb1-4da9-90a6-a327a181e171" />
 
