@@ -21,7 +21,10 @@ func execInput(input string) error {
 	case "exit":
 		os.Exit(0)
 	case "cd":
-		target := args[0]
+		var target string
+		if len(args) == 0 {
+			target = os.Getenv("HOME")
+		}
 		if target == "~" {
 			target = os.Getenv("HOME")
 		}
