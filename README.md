@@ -12,10 +12,10 @@ There's no particular reason for anyone to use this neither anyone is gonna use 
 
 ## Run it
 
-> git clone https://github.com/medhan-sh/mycontainer
-> cd mycontainer
-> make all
-> make run
+- git clone https://github.com/medhan-sh/mycontainer
+- cd mycontainer
+- make all
+- make run
 
 Requires Linux and sudo. Genuinely does not work anywhere else🥲
 
