@@ -7,7 +7,7 @@ import (
 func main() {
 	switch os.Args[1] {
 	case "run":
-		run()
+		runContainer()
 	case "child":
 		child()
 	default:
