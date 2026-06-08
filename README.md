@@ -13,7 +13,7 @@ There's no particular reason for anyone to use this neither anyone is gonna use 
 
 ## Run it
 
-- git clone [https://github.com/medhan-sh/mycontainer](https://github.com/medhan-sh/Containerised-shell-/edit/main/README.md)
+- git clone https://github.com/medhan-sh/Containerised-shell-
 - cd Containerised-shell-
 - make all
 - make run
