@@ -1,6 +1,6 @@
 # containerized-shell
 
-A container runtime built from scratch in Go — no Docker, no containerd, no libraries.
+A container runtime built from scratch in Go
 
 Implements the core Linux primitives that container runtimes are actually built on: namespaces, cgroups, and chroot. Runs an isolated Alpine Linux shell with its own process tree, filesystem, and network stack.
 
@@ -9,12 +9,12 @@ Implements the core Linux primitives that container runtimes are actually built 
 - Forks a child process into isolated **UTS, PID, MNT, and NET namespaces**
 - Sets up **chroot** into an Alpine Linux rootfs
 - Mounts `/proc` inside the container
-- Applies **cgroup v2** resource limits (CPU, memory)
 - Drops you into a real shell — fully isolated from the host
 
 ## Why this is interesting
 
-Most people use Docker without knowing what it actually does. This is what Docker does — minus 100k lines of production hardening. Writing it from scratch makes the kernel primitives concrete: a namespace is just a flag on `clone()`, a cgroup is just a file in `/sys/fs/cgroup`, and chroot is the oldest trick in the book.
+Docker at its core utilizes Linux Namespaces so tried tinkering a little with it.
+The Shell is still pretty imature but i'll add features which seem interesting enough to me, right now its fetching from your current FS which kinda defeats the whole point of having a custom shell.
 
 ## Run it
 
