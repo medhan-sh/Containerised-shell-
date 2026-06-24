@@ -1,28 +1,68 @@
-# Containerised Shell:
+# containerized-shell
 
-A container runtime built from scratch in Go.
+A container runtime built from scratch in Go — no Docker, no containerd, no libraries.
 
-Implements Linux namespaces (UTS, PID, MNT, NET), cgroups, 
-chroot, and an Alpine Linux rootfs — no Docker, no libraries.
-Haven't started working on the TUI tho :(
+Implements the core Linux primitives that container runtimes are actually built on: namespaces, cgroups, and chroot. Runs an isolated Alpine Linux shell with its own process tree, filesystem, and network stack.
 
-<img width="464" height="127" alt="Screenshot 2026-06-08 at 9 54 30 PM" src="https://github.com/user-attachments/assets/52bc2fc3-ecb1-4da9-90a6-a327a181e171" />
+## What it does
 
+- Forks a child process into isolated **UTS, PID, MNT, and NET namespaces**
+- Sets up **chroot** into an Alpine Linux rootfs
+- Mounts `/proc` inside the container
+- Applies **cgroup v2** resource limits (CPU, memory)
+- Drops you into a real shell — fully isolated from the host
 
-There's no particular reason for anyone to use this neither anyone is gonna use this coz making a container and making it run a shell will do more than this but this looks cool and is a learning project plus i got way too much time so why not.
+## Why this is interesting
+
+Most people use Docker without knowing what it actually does. This is what Docker does — minus 100k lines of production hardening. Writing it from scratch makes the kernel primitives concrete: a namespace is just a flag on `clone()`, a cgroup is just a file in `/sys/fs/cgroup`, and chroot is the oldest trick in the book.
 
 ## Run it
 
-- git clone https://github.com/medhan-sh/Containerised-shell-
-- cd Containerised-shell-
-- make all
-- make run
+```bash
+git clone https://github.com/medhan-sh/Containerised-shell-
+cd Containerised-shell-
+make all
+make run
+```
 
-Requires Linux and sudo. Genuinely does not work anywhere else🥲
+> Requires Linux and `sudo`. Does not work on macOS or Windows — that's not a bug, that's the point.
 
 ## How it works
 
-- `run` — forks a child process with isolated namespaces
-- `child` — sets up chroot into Alpine rootfs, mounts /proc, applies cgroup limits, execs the shell
+```
+make run
+  └── run cmd
+        └── clone() with CLONE_NEWUTS | CLONE_NEWPID | CLONE_NEWNS | CLONE_NEWNET
+              └── child cmd
+                    ├── chroot → Alpine rootfs
+                    ├── mount /proc
+                    ├── apply cgroup limits
+                    └── exec /bin/sh
+```
 
+| Step | Syscall / Mechanism | What it isolates |
+|------|-------------------|-----------------|
+| Namespace fork | `clone()` with flags | PID tree, hostname, mounts, network |
+| Filesystem isolation | `chroot()` | Root filesystem |
+| Process visibility | `mount /proc` | Only sees its own PIDs |
+| Resource limits | cgroup v2 (`/sys/fs/cgroup`) | CPU and memory |
 
+## Tech
+
+- **Go** — `os/exec`, `syscall` package for namespace flags and chroot
+- **Linux namespaces** — UTS, PID, MNT, NET via `CLONE_NEW*` flags
+- **cgroups v2** — resource limiting via `/sys/fs/cgroup`
+- **Alpine Linux rootfs** — minimal filesystem for the container environment
+
+## What's next
+
+- [ ] Add bubbletea TUI for managing running containers
+- [ ] Network namespace with veth pair + NAT
+- [ ] Image layer support (overlay filesystem)
+- [ ] Resource usage dashboard
+
+## References
+
+- [Liz Rice — Containers from Scratch (GopherCon 2016)](https://www.youtube.com/watch?v=8fi7uSYlOdc)
+- Linux `man 7 namespaces`, `man 7 cgroups`
+- _Container Security_ by Liz Rice
